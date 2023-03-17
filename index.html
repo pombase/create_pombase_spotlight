@@ -47,7 +47,15 @@ async function getPubMedInfo(pmid) {
   const response = await fetch(baseUrl + pmid);
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(await response.text(), "text/xml");
-  const year = xmlDoc.querySelector('PubDate Year').textContent
+  let year = '';
+  if (xmlDoc.querySelector('PubDate Year')){
+    year = xmlDoc.querySelector('PubDate Year').textContent
+  }
+  else if (xmlDoc.querySelector('PubDate MedlineDate')){
+    year = xmlDoc.querySelector('PubDate MedlineDate').textContent.split(/\s/)[0]
+  }
+  else {year = '?????????????????????????????????'}
+
   const journalName = xmlDoc.querySelector('Journal ISOAbbreviation').textContent
   const firstAuthor = xmlDoc.querySelector('Author LastName').textContent
   const title = xmlDoc.querySelector('Article ArticleTitle').textContent
