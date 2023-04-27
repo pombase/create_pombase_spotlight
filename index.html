@@ -59,7 +59,13 @@ async function getPubMedInfo(pmid) {
   const journalName = xmlDoc.querySelector('Journal ISOAbbreviation').textContent
   const firstAuthor = xmlDoc.querySelector('Author LastName').textContent
   const title = xmlDoc.querySelector('Article ArticleTitle').textContent
-  const doi = 'https://doi.org/' + xmlDoc.querySelector('Article ELocationID[EIdType="doi"]').textContent
+  let doi = ''
+    if (xmlDoc.querySelector('Article ELocationID[EIdType="doi"]')){
+        doi = 'https://doi.org/' + xmlDoc.querySelector('Article ELocationID[EIdType="doi"]').textContent
+    }
+    else {
+        doi = 'https://doi.org/' + xmlDoc.querySelector('ArticleId[IdType="doi"]').textContent
+    }
   const date = (new Date()).toISOString().split('T')[0]
   const authorEtAl = `${firstAuthor} et al, ${year}`
   const imageName = `${date}-PMID${pmid_numbers}.png`
